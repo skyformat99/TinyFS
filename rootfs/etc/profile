@@ -1,0 +1,50 @@
+# set shell style
+HOSTNAME=`/bin/hostname`
+PS1="[\h@\u \w]\# "
+PATH=/bin:/sbin:/usr/bin:/usr/sbin:$PATH 
+LD_LIBRARY_PATH=/lib:/usr/lib        
+export PS1 HOSTNAME PATH LD_LIBRARY_PATH
+
+# making sqlite can use backspace
+stty erase ^H
+
+# set tslib
+export TSLIB_ROOT=/usr/local/arm/tslib
+export TSLIB_TSDEVICE=/dev/input/event1
+export TSLIB_CALIBFILE=/etc/pointercal
+export TSLIB_CONFFILE=$TSLIB_ROOT/etc/ts.conf
+export TSLIB_PLUGINDIR=$TSLIB_ROOT/lib/ts
+export LD_LIBRARY_PATH=$TSLIB_ROOT/lib:$LD_LIBRARY_PATH
+export TSLIB_FBDEVICE=/dev/fb0
+export PATH=$TSLIB_ROOT:$PATH
+
+# set qt4.8.5 lib
+export QT4_8_5_ROOT=/usr/local/arm/qt4.8.5_ti
+export LD_LIBRARY_PATH=$QT4_8_5_ROOT/lib:$LD_LIBRARY_PATH
+export QT_QWS_FONTDIR=$QT4_8_5_ROOT/lib/fonts
+# export QWS_MOUSE_PROTO="mouseman:/dev/input/mice tslib:/dev/input/${touchE    vent}"
+# export QWS_MOUSE_PROTO=tslib:/dev/input/touchscreen
+export QWS_MOUSE_PROTO="mouseman:/dev/input/mice"
+export QWS_USB_KEYBOARD=/dev/input/event2
+
+#if [ -f /etc/pointercal ];then
+#    echo "MXS touchscreen have calibrate!"
+#else
+#    $TSLIB_ROOT/bin/ts_calibrate
+#fi
+
+# auto get IP
+udhcpc -S -b -p /var/run/udhcpc.pid &
+
+# show a application
+if test -e /dev/fb0; then
+    width=`fbset | grep 'geometry' | awk '{print $2}'`
+    height=`fbset | grep 'geometry' | awk '{print $3}'`
+    let height=height-38
+    geo=`echo $width\x$height+0+0`
+fi
+#export QWS_DISPLAY='Transformed:Rot90'
+/usr/application/matrix_gui -qws -geometry $geo $* &
+
+
+

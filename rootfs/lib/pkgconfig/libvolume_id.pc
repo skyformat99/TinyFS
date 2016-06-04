@@ -1,0 +1,10 @@
+prefix=/home/Qt/rootfs/busybox/udev/udev-126/install
+exec_prefix=/home/Qt/rootfs/busybox/udev/udev-126/install
+libdir=/home/Qt/rootfs/busybox/udev/udev-126/install/lib
+includedir=/home/Qt/rootfs/busybox/udev/udev-126/install/include
+
+Name: libvolume_id
+Description: Library for reading metadata, label, uuid from various filesystems
+Version: 126
+Libs: -L${libdir} -lvolume_id
+Cflags: -I${includedir}
